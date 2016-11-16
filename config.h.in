@@ -1,0 +1,77 @@
+/* config.h.in.  Generated automatically from configure.in by autoheader.  */
+
+/* Define if you have the popen function.  */
+#undef HAVE_POPEN
+
+/* Define if you have the <X11/Xlib.h> header file.  */
+#undef HAVE_X11_XLIB_H
+
+/* Define if you have the <X11/extensions/Xdbe.h> header file.  */
+#undef HAVE_X11_EXTENSIONS_XDBE_H
+
+/* Define if you have the <dirent.h> header file.  */
+#undef HAVE_DIRENT_H
+
+/* Define if you have the <linux/soundcard.h> header file.  */
+#undef HAVE_LINUX_SOUNDCARD_H
+
+/* Define if you have the <signal.h> header file.  */
+#undef HAVE_SIGNAL_H
+
+/* Define if you have the <sys/mount.h> header file.  */
+#undef HAVE_SYS_MOUNT_H
+
+/* Define if you have the <sys/param.h> header file.  */
+#undef HAVE_SYS_PARAM_H
+
+/* Define if you have the <sys/stat.h> header file.  */
+#undef HAVE_SYS_STAT_H
+
+/* Define if you have the <sys/statfs.h> header file.  */
+#undef HAVE_SYS_STATFS_H
+
+/* Define if you have the <sys/utsname.h> header file.  */
+#undef HAVE_SYS_UTSNAME_H
+
+/* Define if you have the <unistd.h> header file.  */
+#undef HAVE_UNISTD_H
+
+/* Name of package */
+#undef PACKAGE
+
+/* Version number of package */
+#undef VERSION
+
+/* Define if you want support for window creating */
+#undef OWN_WINDOW
+
+/* Define if you want support for the DBE extension */
+#undef DOUBLE_BUFFER
+
+/* Define if you want to use /proc/uptime for uptime */
+#undef PROC_UPTIME
+
+/* Define if you want SETI at Home stats */
+#undef SETI
+
+/* Define if you want NVCTRL support */
+#undef NVCTRL
+
+/* Define if you have X11 */
+#undef HAVE_X11
+
+/* Define if you have libXext */
+#undef HAVE_LIBXEXT
+
+/* Define if you are using Xft */
+#undef XFT
+
+/* Define if you have sysinfo (Linux) */
+#undef HAVE_SYSINFO
+
+/* Define if you have kstat (Solaris) */
+#undef HAVE_KSTAT
+
+/* Define if you have getloadavg */
+#undef HAVE_GETLOADAVG
+

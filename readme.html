@@ -1,0 +1,366 @@
+<!-- readme.html, http://torsmo.sourceforge.net/readme.html -->
+<h3>TORSMO - Tyopoyta ORvelo System MOnitor (version 0.17)</h3>
+<p>
+Copyright (c) 2004, Hannu Saransaari and Lauri Hakkarainen<br>
+All rights reserved.<br>
+This program is licensed under BSD license, read COPYING<br>
+</p>
+<h3>WHAT IS TORSMO</h3>
+<p>
+    Torsmo is a system monitor for Linux that sits in the corner of your
+    desktop. Torsmo renders itself on the root window (on the desktop) or to
+    its own transparent window any special eyecandy.<br>
+    Torsmo can show lots of info about your system, including:
+
+<UL>
+<LI>kernel version
+<LI>uptime
+<LI>network interface information
+<LI>memory and swap usage
+<LI>hostname
+<LI>machine, i686 for example
+<LI>system name, Linux for example
+<LI>temperatures from i2c-sensors
+</UL>
+</p>
+
+<h3>COMPILING</h3>
+<p>
+    To compile and run torsmo:
+
+<pre>
+        ./configure
+        make
+        ./torsmo
+</pre>
+</p>
+<p>Torsmo doesn't probably compile with other compilers than gcc and icc.
+   It doesn't compile with C89 compiler and not even with pure C99. It
+   uses few things that might not exist: strdup(), strcasecmp(),
+   strncasecmp(), optarg variable with getopt() and long long (not in
+   C89). Crashes in file system statistics stuff when compiled with icc, I
+   don't know exactly why.</p>
+<P>You can disable 'drawing to own window' feature in case you don't need it
+   by passing --disable-own-window to configure -script.</P>
+
+<H3>CONFIGURING</H3>
+
+<p>Default configuration file is $HOME/.torsmorc (can be changed from
+   torsmo.c among other things). See torsmorc.sample. You might want to
+   copy it to $HOME/.torsmorc and then start modifying it.</p>
+
+<H4>Configuration file confs</H4>
+<TABLE summary="Configuration options">
+<TR><TH>Conf			<TH>Meaning
+<TR><TD>alignment		<TD>Aligned position on screen, may be
+                                    top_left, top_right, bottom_left,
+				    bottom_right
+<TR><TD>background		<TD>Boolean value, if true, torsmo will be
+                                    forked to background when started
+<TR><TD>border_margin		<TD>Border margin in pixels
+<TR><TD>border_width		<TD>Border width in pixels
+<TR><TD>default_color		<TD>Default color and border color
+<TR><TD>default_shade_color	<TD>Default shading color and border's shading
+                                    color
+<TR><TD>default_outline_color	<TD>Default outline color
+<TR><TD>double_buffer		<TD>Use the Xdbe extension? (eliminates
+                                    flicker) It is highly recommended to use
+				    own window with this one so double buffer
+				    won't be so big.
+<TR><TD>draw_borders		<TD>Draw borders around text?
+<TR><TD>draw_shades		<TD>Draw shades?
+<TR><TD>draw_outline		<TD>Draw outlines?
+<TR><TD>font			<TD>Font name in X, xfontsel can be used to
+                                    get a nice font
+<TR><TD>gap_x			<TD>Gap between right or left border of screen
+<TR><TD>gap_y			<TD>Gap between top or bottom border of screen
+<TR><TD>no_buffers		<TD>Substract (file system) buffers from used
+                                    memory?
+<TR><TD>mail_spool		<TD>Mail spool for mail checking
+<TR><TD>minimum_size		<TD>Minimum size of window
+<TR><TD>own_window		<TD>Boolean, create own window to draw?
+<TR><TD>pad_percents		<TD>Pad percentages to this many decimals
+                                    (0 = no padding)
+<TR><TD>stippled_borders	<TD>Border stippling (dashing) in pixels
+<TR><TD>update_interval		<TD>Update interval in seconds
+<TR><TD>uppercase		<TD>Boolean value, if true, text is rendered
+                                    in upper case
+<TR><TD>use_xft			<TD>Use Xft (anti-aliased font and stuff)
+<TR><TD>text			<TD>After this begins text to be formatted on
+                                    screen
+</TABLE>
+<P>Boolean variable without value in text means yes. Value may be also yes,
+   true or any negative or positive integer meaning yes. No, false or
+   zero meaning no.<BR>
+   There may be some variables in text. Variable is
+   given either in format $variable or in ${variable}. Latter allows
+   characters right after the variable and must be used in some stuff
+   because of arguments.</P>
+<BR>
+
+<H4>Command line options</H4>
+<TABLE summary="Command line options">
+<TR><TH>Argument     <TH>Description
+<TR><TD>-V           <TD>Prints version and exits
+<TR><TD>-a ALIGNMENT <TD>Text alignment on screen, {top,bottom}_{left,right}
+<TR><TD>-b	     <TD>Use double buffering (eliminates flicker)
+<TR><TD>-c FILE      <TD>Config file to load instead of $HOME/.torsmorc
+<TR><TD>-d           <TD>Daemonize, fork to background
+<TR><TD>-f FONT      <TD>Font to use
+<TR><TD>-h           <TD>Prints command line help and exits
+<TR><TD>-o           <TD>Create own window to draw
+<TR><TD>-t TEXT      <TD>Text to render, remember single quotes, like -t
+                         '$uptime'
+<TR><TD>-u SECS      <TD>Update interval
+<TR><TD>-w WIN_ID    <TD>Window id to draw
+<TR><TD>-x X         <TD>X position
+<TR><TD>-y Y         <TD>Y position
+</TABLE>
+<P>Command line options override configurations defined in configuration file.
+</P>
+<BR>
+
+<H4>Variables in text</H4>
+
+<TABLE summary="Variables in text">
+<TR><TH>Variable
+    <TH>Arguments
+    <TH>Description
+
+<TR><TD valign="top">acpiacadapter
+    <TD valign="top">
+    <TD valign="top">ACPI ac adapter state.
+
+<TR><TD valign="top">acpifan
+    <TD valign="top">
+    <TD valign="top">ACPI fan state
+
+<TR><TD valign="top">acpitemp
+    <TD valign="top">
+    <TD valign="top">ACPI temperature.
+
+<TR><TD valign="top">battery
+    <TD valign="top">(<I>name</I>)
+    <TD valign="top">Remaining capasity in ACPI or APM battery. ACPI battery
+        name can be given as argument (default is BAT0).
+
+<TR><TD valign="top">buffers
+    <TD valign="top">
+    <TD valign="top">Amount of memory buffered
+
+<TR><TD valign="top">cached
+    <TD valign="top">
+    <TD valign="top">Amount of memory cached
+
+<TR><TD valign="top">color
+    <TD valign="top">(<I>color</I>)
+    <TD valign="top">Change drawing color to <I>color</I>
+
+<TR><TD valign="top">cpu
+    <TD valign="top">
+    <TD valign="top">CPU usage in percents
+
+<TR><TD valign="top">cpubar
+    <TD valign="top">(<I>height</I>(,<I>width</I>))
+    <TD valign="top">Bar that shows CPU usage, <I>height</I> is bar's height
+        in pixels
+
+<TR><TD valign="top">downspeed
+    <TD valign="top"><I>net</I>
+    <TD valign="top">Download speed in kilobytes
+
+<TR><TD valign="top">downspeedf
+    <TD valign="top"><I>net</I>
+    <TD valign="top">Download speed in kilobytes with one decimal
+
+<TR><TD valign="top">exec
+    <TD valign="top"><I>shell command</I>
+    <TD valign="top">Executes a shell command and displays the output in torsmo.
+        <B>warning</B>: this takes a lot more resources than other variables.
+
+<TR><TD valign="top">execi
+    <TD valign="top"><I>interval</I>, <I>shell command</I>
+    <TD valign="top">Same as exec but with specific interval. Interval can't be
+        less than update_interval in configuration.
+
+<TR><TD valign="top">fs_bar
+    <TD valign="top">(<I>height</I>), (<I>fs</I>)
+    <TD valign="top">Bar that shows how much space is used on a file system.
+        <I>height</I> is the height in pixels. <I>fs</I> is any file on that
+	file system.
+
+<TR><TD valign="top">fs_free
+    <TD valign="top">(<I>fs</I>)
+    <TD valign="top">Free space on a file system available for users.
+
+<TR><TD valign="top">fs_free_perc
+    <TD valign="top">(<I>fs</I>)
+    <TD valign="top">Free percentage of space on a file system available for
+        users.
+
+<TR><TD valign="top">fs_size
+    <TD valign="top">(<I>fs</I>)
+    <TD valign="top">File system size
+
+<TR><TD valign="top">fs_used
+    <TD valign="top">(<I>fs</I>)
+    <TD valign="top">File system used space
+
+<TR><TD valign="top">hr
+    <TD valign="top">(<I>height</I>)
+    <TD valign="top">Horizontal line, <I>height</I> is the height in pixels
+
+<TR><TD valign="top">i2c
+    <TD valign="top">(<I>dev</I>), <I>type</I>, <I>n</I>
+    <TD valign="top">I2C sensor from sysfs (Linux 2.6). <I>dev</I> may be
+        omitted if you have only one I2C device. <I>type</I> is either in (or
+	vol) meaning voltage, fan meaning fan or temp meaning temperature.
+	<I>n</I> is number of the sensor. See /sys/bus/i2c/devices/ on your
+	local computer.
+
+<TR><TD valign="top">kernel
+    <TD valign="top">
+    <TD valign="top">Kernel version
+
+<TR><TD valign="top">loadavg
+    <TD valign="top">(1), (2), (3)
+    <TD valign="top">System load average, 1 is for past 1 minute, 2 for past
+        5 minutes and 3 for past 15 minutes.
+
+<TR><TD valign="top">machine
+    <TD valign="top">
+    <TD valign="top">Machine, i686 for example
+
+<TR><TD valign="top">mails
+    <TD valign="top">
+    <TD valign="top">Mail count in mail spool. You can use program like
+        fetchmail to get mails from some server using your favourite
+	protocol. See also new_mails.
+
+<TR><TD valign="top">mem
+    <TD valign="top">
+    <TD valign="top">Amount of memory in use
+
+<TR><TD valign="top">membar
+    <TD valign="top">(<I>height</I>)
+    <TD valign="top">Bar that shows amount of memory in use
+
+<TR><TD valign="top">memmax
+    <TD valign="top">
+    <TD valign="top">Total amount of memory
+
+<TR><TD valign="top">memperc
+    <TD valign="top">
+    <TD valign="top">Percentage of memory in use
+
+<TR><TD valign="top">new_mails
+    <TD valign="top">
+    <TD valign="top">Unread mail count in mail spool.
+
+<TR><TD valign="top">nodename
+    <TD valign="top">
+    <TD valign="top">Hostname
+
+<TR><TD valign="top">outlinecolor
+    <TD valign="top">(<I>color</I>)
+    <TD valign="top">Change outline color
+
+<TR><TD valign="top">pre_exec
+    <TD valign="top"><I>shell command</I>
+    <TD valign="top">Executes a shell command one time before torsmo displays
+        anything and puts output as text.
+
+<TR><TD valign="top">processes
+    <TD valign="top">
+    <TD valign="top">Total processes (sleeping and running)
+
+<TR><TD valign="top">running_processes
+    <TD valign="top">
+    <TD valign="top">Running processes (not sleeping), requires Linux 2.6
+
+<TR><TD valign="top">shadecolor
+    <TD valign="top">(<I>color</I>)
+    <TD valign="top">Change shading color
+
+<TR><TD valign="top">stippled_hr
+    <TD valign="top">(<I>space</I>), (<I>height</I>)
+    <TD valign="top">Stippled (dashed) horizontal line
+
+<TR><TD valign="top">swapbar
+    <TD valign="top">(<I>height</I>)
+    <TD valign="top">Bar that shows amount of swap in use
+
+<TR><TD valign="top">swap
+    <TD valign="top">
+    <TD valign="top">Amount of swap in use
+
+<TR><TD valign="top">swapmax
+    <TD valign="top">
+    <TD valign="top">Total amount of swap
+
+<TR><TD valign="top">swapperc
+    <TD valign="top">
+    <TD valign="top">Percentage of swap in use
+
+<TR><TD valign="top">sysname
+    <TD valign="top">
+    <TD valign="top">System name, Linux for example
+
+<TR><TD valign="top">time
+    <TD valign="top">(<I>format</I>)
+    <TD valign="top">Local time, see man strftime to get more information about
+        format. Cf. utime.
+
+<TR><TD valign="top">totaldown
+    <TD valign="top"><I>net</I>
+    <TD valign="top">Total download, overflows at 4 GB on Linux with 32-bit
+        arch and there doesn't seem to be a way to know how many times it has
+	already done that before torsmo has started.
+
+<TR><TD valign="top">totalup
+    <TD valign="top"><I>net</I>
+    <TD valign="top">Total upload, this one too, may overflow
+
+<TR><TD valign="top">updates
+    <TD valign="top">
+    <TD valign="top">Number of updates (for debugging)
+
+<TR><TD valign="top">upspeed
+    <TD valign="top"><I>net</I>
+    <TD valign="top">Upload speed in kilobytes
+
+<TR><TD valign="top">upspeedf
+    <TD valign="top"><I>net</I>
+    <TD valign="top">Upload speed in kilobytes with one decimal
+
+<TR><TD valign="top">uptime
+    <TD valign="top">
+    <TD valign="top">Uptime
+
+<TR><TD valign="top">uptime_short
+    <TD valign="top">
+    <TD valign="top">Uptime in a shorter format
+
+<TR><TD valign="top">utime
+    <TD valign="top">(<I>format</I>)
+    <TD valign="top">Same as time, above, but shows UTC instead of local time.
+</TABLE>
+<BR>
+<P>Colors are parsed using XParseColor(), there might be a list of them:
+   /usr/X11R6/lib/X11/rgb.txt. Color can be also in #rrggbb format (hex).
+</P>
+<P>Note that when displaying bytes, power is 1024 and not 1000 so 1M
+   really means 1024*1024 bytes and not 1000*1000.
+</P>
+
+<H3>KNOWN PROBLEMS</H3>
+
+<P>Drawing to root or some other desktop window directly doesn't work with
+   all window managers. Especially doesn't work well with Gnome and it has
+   been reported that it doesn't work with KDE either. Nautilus can be
+   disabled from drawing to desktop with program gconf-editor. Uncheck
+   show_desktop in /apps/nautilus/preferences/. There is -w switch in
+   torsmo to set some specific window id. You might find xwininfo
+   -tree useful to find the window to draw to. You can also use -o argument
+   which makes torsmo to create its own window.
+</P>

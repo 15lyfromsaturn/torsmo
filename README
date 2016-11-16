@@ -1,0 +1,218 @@
+  TORSMO - Tyopoyta ORvelo System MOnitor (version 0.17)
+
+   Copyright (c) 2004, Hannu Saransaari and Lauri Hakkarainen
+   All rights reserved.
+   This program is licensed under BSD license, read COPYING
+
+  WHAT IS TORSMO
+
+   Torsmo is a system monitor for Linux that sits in the corner of your
+   desktop. Torsmo renders itself on the root window (on the desktop) or to
+   its own transparent window any special eyecandy.
+   Torsmo can show lots of info about your system, including:
+
+     * kernel version
+     * uptime
+     * network interface information
+     * memory and swap usage
+     * hostname
+     * machine, i686 for example
+     * system name, Linux for example
+     * temperatures from i2c-sensors
+
+  COMPILING
+
+   To compile and run torsmo:
+
+         ./configure
+         make
+         ./torsmo
+
+   Torsmo doesn't probably compile with other compilers than gcc and icc. It
+   doesn't compile with C89 compiler and not even with pure C99. It uses few
+   things that might not exist: strdup(), strcasecmp(), strncasecmp(), optarg
+   variable with getopt() and long long (not in C89). Crashes in file system
+   statistics stuff when compiled with icc, I don't know exactly why.
+
+   You can disable 'drawing to own window' feature in case you don't need it
+   by passing --disable-own-window to configure -script.
+
+  CONFIGURING
+
+   Default configuration file is $HOME/.torsmorc (can be changed from
+   torsmo.c among other things). See torsmorc.sample. You might want to copy
+   it to $HOME/.torsmorc and then start modifying it.
+
+    Configuration file confs
+
+           Conf                                Meaning                        
+   alignment             Aligned position on screen, may be top_left,         
+                         top_right, bottom_left, bottom_right                 
+   background            Boolean value, if true, torsmo will be forked to     
+                         background when started                              
+   border_margin         Border margin in pixels                              
+   border_width          Border width in pixels                               
+   default_color         Default color and border color                       
+   default_shade_color   Default shading color and border's shading color     
+   default_outline_color Default outline color                                
+                         Use the Xdbe extension? (eliminates flicker) It is   
+   double_buffer         highly recommended to use own window with this one   
+                         so double buffer won't be so big.                    
+   draw_borders          Draw borders around text?                            
+   draw_shades           Draw shades?                                         
+   draw_outline          Draw outlines?                                       
+   font                  Font name in X, xfontsel can be used to get a nice   
+                         font                                                 
+   gap_x                 Gap between right or left border of screen           
+   gap_y                 Gap between top or bottom border of screen           
+   no_buffers            Substract (file system) buffers from used memory?    
+   mail_spool            Mail spool for mail checking                         
+   minimum_size          Minimum size of window                               
+   own_window            Boolean, create own window to draw?                  
+   pad_percents          Pad percentages to this many decimals (0 = no        
+                         padding)                                             
+   stippled_borders      Border stippling (dashing) in pixels                 
+   update_interval       Update interval in seconds                           
+   uppercase             Boolean value, if true, text is rendered in upper    
+                         case                                                 
+   use_xft               Use Xft (anti-aliased font and stuff)                
+   text                  After this begins text to be formatted on screen     
+
+   Boolean variable without value in text means yes. Value may be also yes,
+   true or any negative or positive integer meaning yes. No, false or zero
+   meaning no.
+   There may be some variables in text. Variable is given either in format
+   $variable or in ${variable}. Latter allows characters right after the
+   variable and must be used in some stuff because of arguments.
+
+    Command line options
+
+     Argument                          Description                        
+   -V           Prints version and exits                                  
+   -a ALIGNMENT Text alignment on screen, {top,bottom}_{left,right}       
+   -b           Use double buffering (eliminates flicker)                 
+   -c FILE      Config file to load instead of $HOME/.torsmorc            
+   -d           Daemonize, fork to background                             
+   -f FONT      Font to use                                               
+   -h           Prints command line help and exits                        
+   -o           Create own window to draw                                 
+   -t TEXT      Text to render, remember single quotes, like -t '$uptime' 
+   -u SECS      Update interval                                           
+   -w WIN_ID    Window id to draw                                         
+   -x X         X position                                                
+   -y Y         Y position                                                
+
+   Command line options override configurations defined in configuration
+   file.
+
+    Variables in text
+
+       Variable          Arguments                   Description              
+   acpiacadapter                        ACPI ac adapter state.                
+   acpifan                              ACPI fan state                        
+   acpitemp                             ACPI temperature.                     
+   battery           (name)             Remaining capasity in ACPI or APM     
+                                        battery. ACPI battery name can be     
+                                        given as argument (default is BAT0).  
+   buffers                              Amount of memory buffered             
+   cached                               Amount of memory cached               
+   color             (color)            Change drawing color to color         
+   cpu                                  CPU usage in percents                 
+   cpubar            (height(,width))   Bar that shows CPU usage, height is   
+                                        bar's height in pixels                
+   downspeed         net                Download speed in kilobytes           
+   downspeedf        net                Download speed in kilobytes with one  
+                                        decimal                               
+   exec              shell command      Executes a shell command and displays 
+                                        the output in torsmo. warning: this   
+                                        takes a lot more resources than other 
+                                        variables.                            
+   execi             interval, shell    Same as exec but with specific        
+                     command            interval. Interval can't be less than 
+                                        update_interval in configuration.     
+   fs_bar            (height), (fs)     Bar that shows how much space is used 
+                                        on a file system. height is the       
+                                        height in pixels. fs is any file on   
+                                        that file system.                     
+   fs_free           (fs)               Free space on a file system available 
+                                        for users.                            
+   fs_free_perc      (fs)               Free percentage of space on a file    
+                                        system available for users.           
+   fs_size           (fs)               File system size                      
+   fs_used           (fs)               File system used space                
+   hr                (height)           Horizontal line, height is the height 
+                                        in pixels                             
+   i2c               (dev), type, n     I2C sensor from sysfs (Linux 2.6).    
+                                        dev may be omitted if you have only   
+                                        one I2C device. type is either in (or 
+                                        vol) meaning voltage, fan meaning fan 
+                                        or temp meaning temperature. n is     
+                                        number of the sensor. See             
+                                        /sys/bus/i2c/devices/ on your local   
+                                        computer.                             
+   kernel                               Kernel version                        
+   loadavg           (1), (2), (3)      System load average, 1 is for past 1  
+                                        minute, 2 for past 5 minutes and 3    
+                                        for past 15 minutes.                  
+   machine                              Machine, i686 for example             
+   mails                                Mail count in mail spool. You can use 
+                                        program like fetchmail to get mails   
+                                        from some server using your favourite 
+                                        protocol. See also new_mails.         
+   mem                                  Amount of memory in use               
+   membar            (height)           Bar that shows amount of memory in    
+                                        use                                   
+   memmax                               Total amount of memory                
+   memperc                              Percentage of memory in use           
+   new_mails                            Unread mail count in mail spool.      
+   nodename                             Hostname                              
+   outlinecolor      (color)            Change outline color                  
+   pre_exec          shell command      Executes a shell command one time     
+                                        before torsmo displays anything and   
+                                        puts output as text.                  
+   processes                            Total processes (sleeping and         
+                                        running)                              
+   running_processes                    Running processes (not sleeping),     
+                                        requires Linux 2.6                    
+   shadecolor        (color)            Change shading color                  
+   stippled_hr       (space), (height)  Stippled (dashed) horizontal line     
+   swapbar           (height)           Bar that shows amount of swap in use  
+   swap                                 Amount of swap in use                 
+   swapmax                              Total amount of swap                  
+   swapperc                             Percentage of swap in use             
+   sysname                              System name, Linux for example        
+   time              (format)           Local time, see man strftime to get   
+                                        more information about format. Cf.    
+                                        utime.                                
+   totaldown         net                Total download, overflows at 4 GB on  
+                                        Linux with 32-bit arch and there      
+                                        doesn't seem to be a way to know how  
+                                        many times it has already done that   
+                                        before torsmo has started.            
+   totalup           net                Total upload, this one too, may       
+                                        overflow                              
+   updates                              Number of updates (for debugging)     
+   upspeed           net                Upload speed in kilobytes             
+   upspeedf          net                Upload speed in kilobytes with one    
+                                        decimal                               
+   uptime                               Uptime                                
+   uptime_short                         Uptime in a shorter format            
+   utime             (format)           Same as time, above, but shows UTC    
+                                        instead of local time.                
+
+   Colors are parsed using XParseColor(), there might be a list of them:
+   /usr/X11R6/lib/X11/rgb.txt. Color can be also in #rrggbb format (hex).
+
+   Note that when displaying bytes, power is 1024 and not 1000 so 1M really
+   means 1024*1024 bytes and not 1000*1000.
+
+  KNOWN PROBLEMS
+
+   Drawing to root or some other desktop window directly doesn't work with
+   all window managers. Especially doesn't work well with Gnome and it has
+   been reported that it doesn't work with KDE either. Nautilus can be
+   disabled from drawing to desktop with program gconf-editor. Uncheck
+   show_desktop in /apps/nautilus/preferences/. There is -w switch in torsmo
+   to set some specific window id. You might find xwininfo -tree useful to
+   find the window to draw to. You can also use -o argument which makes
+   torsmo to create its own window.
